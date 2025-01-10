@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>FBX Model in Three.js</title>
+    <link rel="stylesheet" href="menuLiftConfigurationStyle.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.131/build/three.module.js",
+                "jsm/": "https://cdn.jsdelivr.net/npm/three@0.131/examples/jsm/"
+            }
+        }
+    </script>
+    
+</head>
+<body>
+    <div id="lift-container" class="lift-container">
+
+        <div class="choose-lift-position-container">
+           
+            <button class="parameter-button" onclick="selectLiftPosition(this)">3 D</button>
+        </div>
+    </div>
+
+    <div class="menu-container">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('MainParametersTab')">Основные параметры</div>
+            <div class="tab" onclick="showTab('WallsParametersTab')">Стены</div>
+            <div class="tab" onclick="showTab('DoorParametrsTab')">Двери</div>
+            <div class="tab" onclick="showTab('CeilingParametrsTab')">Потолок</div>
+            <div class="tab" onclick="showTab('FloorParametrsTab')">Пол</div>
+            <div class="tab" onclick="showTab('BoardParametrsTab')">Панель управления</div>
+            <div class="tab" onclick="showTab('MirrorarametrsTab')">Зеркало</div>
+            <div class="tab" onclick="showTab('HandrailParametrsTab')">Поручни</div>
+            <div class="tab" onclick="showTab('OtherParametrsTab')">Остальные</div>
+        </div>
+    
+        <div class="content">
+            <div id="MainParametersTab" class="tab-content active">
+                <h2>Основные параметры</h2>
+    
+                <p class="content-header">Размер кабины:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button size-width active" onclick="selectParameterButton(this)">30x40</button>
+                    <button class="parameter-button size-width" onclick="selectParameterButton(this)">40x60</button>
+                    <button class="parameter-button size-width" onclick="selectParameterButton(this)">40x70</button>
+                </div>
+    
+                <p class="content-header">Тип кабины:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button active" onclick="selectParameterButton(this)">Непроходная</button>
+                    <button class="parameter-button" onclick="selectParameterButton(this)">Проходная</button>
+                </div>
+    
+                <p class="content-header">Тип открывания:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button active" onclick="selectParameterButton(this)">Центральное</button>
+                    <button class="parameter-button" onclick="selectParameterButton(this)">Телескопическое (левое)</button>
+                    <button class="parameter-button" onclick="selectParameterButton(this)">Телескопическое (правое)</button>
+                    <button class="parameter-button" onclick="selectParameterButton(this)">Центрально-телескопическое</button>
+                </div>
+            </div>
+    
+            <div id="WallsParametersTab" class="tab-content">
+                <h2>Стены</h2>
+                <p class="content-header">Применить материал на стену:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="wall-parameter-button wall-button-width active" data-target="all" onclick="selectWall(this)">Все</button>
+                    <button class="wall-parameter-button wall-button-width" data-target="front" onclick="selectWall(this)">Передняя</button>
+                    <button class="wall-parameter-button wall-button-width" data-target="back" onclick="selectWall(this)">Задняя</button>
+                    <button class="wall-parameter-button wall-button-width" data-target="left" onclick="selectWall(this)">Левая</button>
+                    <button class="wall-parameter-button wall-button-width" data-target="right" onclick="selectWall(this)">Правая</button>
+                </div>
+    
+                <div class = "image-content">
+                </div>
+                <p>Загрузить свою текстуру!!!!</p>
+            </div>
+    
+            <div id="DoorParametrsTab" class="tab-content">
+                <h2>Двери</h2>
+                <p class="content-header">Материал дверей:</p>
+                <div class = "image-content">
+                </div>
+            </div>
+    
+            <div id="CeilingParametrsTab" class="tab-content">
+                <h2>Потолок</h2>
+                <p class="content-header">Узор потолка:</p>
+                <div class = "image-content">
+                </div>
+    
+                <p class="content-header">Материал плафона потолка:</p>
+                <div class = "image-content">
+                </div>
+    
+                <p class="content-header">Ориентация рисунка светильника:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button active" onclick="selectParameterButton(this)">Горизонтальная</button>
+                    <button class="parameter-button" onclick="selectParameterButton(this)">Вертикальная</button>
+                </div>
+            </div>
+    
+            <div id="CeilingParametrsTab" class="tab-content">
+                <p class="content-header">Узор потолка:</p>
+                <div class = "image-content">
+                </div>
+    
+                <p class="content-header">Материал плафона потолка:</p>
+                <div class = "image-content">
+                </div>
+    
+                <p class="content-header">Ориентация рисунка светильника:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button active" onclick="selectParameterButton(this)">Горизонтальная</button>
+                    <button class="parameter-button" onclick="selectParameterButton(this)">Вертикальная</button>
+                </div>
+            </div>
+    
+            <div id="FloorParametrsTab" class="tab-content">
+                <h2>Пол</h2>
+                <p class="content-header">Напольное покрытие:</p>
+                <div class = "image-content">
+                </div>
+            </div>
+    
+            <div id="BoardParametrsTab" class="tab-content">
+                <h2>Панель управлени</h2>
+                <p class="content-header">Расположение панели:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button wall-button-width active" onclick="selectParameterButton(this)">Левое</button>
+                    <button class="parameter-button wall-button-width" onclick="selectParameterButton(this)">Правое</button>
+                    <button class="parameter-button wall-button-width" onclick="selectParameterButton(this)">По центру</button>
+                    <button class="parameter-button wall-button-width" onclick="selectParameterButton(this)">Ближе к двери</button>
+                    <button class="parameter-button wall-button-width" onclick="selectParameterButton(this)">С двух сторон</button>
+                </div>
+                <p class="content-header">Пост приказов:</p>
+                <div class = "image-content">
+                </div>
+            </div>
+    
+            <div id="MirrorarametrsTab" class="tab-content">
+                <h2>Зеркало</h2>
+                <p class="content-header">Наличие:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button size-width" onclick="selectParameterButton(this)">Да</button>
+                    <button class="parameter-button active size-width" onclick="selectParameterButton(this)">Нет</button>
+                </div>
+    
+                <p class="content-header">Тип зеркала:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button active" onclick="selectParameterButton(this)">В пол</button>
+                    <button class="parameter-button" onclick="selectParameterButton(this)">До поручня</button>
+                </div>
+    
+                <p class="content-header">Расположение:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button active" onclick="selectManyParameterButton(this)">Сзади</button>
+                    <button class="parameter-button" onclick="selectManyParameterButton(this)">Справа</button>
+                    <button class="parameter-button" onclick="selectManyParameterButton(this)">Слева</button>
+                </div>
+            </div>
+    
+            <div id="HandrailParametrsTab" class="tab-content">
+                <h2>Поручни</h2>
+                <p class="content-header">Материал поручня:</p>
+                <div class = "image-content">
+                </div>
+                <p class="content-header">Наличие:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button size-width" onclick="selectParameterButton(this)">Да</button>
+                    <button class="parameter-button active size-width" onclick="selectParameterButton(this)">Нет</button>
+                </div>
+                <p class="content-header">Тип поручня:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button active" onclick="selectParameterButton(this)">Составной</button>
+                    <button class="parameter-button" onclick="selectParameterButton(this)">Объединённый</button>
+                </div>
+                <p class="content-header">Расположение поручня:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button active" onclick="selectManyParameterButton(this)">Сзади</button>
+                    <button class="parameter-button" onclick="selectManyParameterButton(this)">Справа</button>
+                    <button class="parameter-button" onclick="selectManyParameterButton(this)">Слева</button>
+                </div>
+            </div>
+    
+            <div id="OtherParametrsTab" class="tab-content">
+                <h2>Остальные параметры</h2>
+                <p class="content-header">Стена:</p>
+                <div class="choose-parametr-button-container">
+                    <button class="parameter-button wall-button-width active" onclick="selectParameterButton(this)">Все</button>
+                    <button class="parameter-button wall-button-width" onclick="selectParameterButton(this)">Задняя</button>
+                    <button class="parameter-button wall-button-width" onclick="selectParameterButton(this)">Передняя</button>
+                    <button class="parameter-button wall-button-width" onclick="selectParameterButton(this)">Левая</button>
+                    <button class="parameter-button wall-button-width" onclick="selectParameterButton(this)">Правая</button>
+                </div>
+                <p class="content-header">Материал отбойников:</p>
+                <div class = "image-content">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="tree.js"></script>
+    <script type="module" src="showImg.js"></script>
+    <script>   
+        function showTab(tabId) {
+        // Скрываем все вкладки
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => {
+            content.classList.remove('active');
+        });
+
+        // Убираем активный класс со всех табов
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Показываем выбранную вкладку и добавляем активный класс
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        switch(tabId){
+            case "WallsParametersTab":
+            showImages('walls', tabId);
+            break;
+            case "DoorParametrsTab":
+            showImages('door', tabId);
+            break;
+            case "CeilingParametrsTab":
+            showImages('ceiling', tabId);
+            break;
+            case "FloorParametrsTab":
+            showImages('floor', tabId);
+            break;
+            case "BoardParametrsTab":
+            showImages('board', tabId);
+            break;
+        }
+    }
+</script>
+
+    <script src="js/ButtonAnimation/ParameterButtons.js"></script>
+
+</body>
+</html>

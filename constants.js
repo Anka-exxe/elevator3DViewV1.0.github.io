@@ -1,0 +1,11 @@
+export const leftWall = 'LeftWall';
+export const rightWall = 'RightWall';
+export const frontWall = 'FrontWall';
+export const backWall = 'BackWall';
+export const floor = 'Floor';
+export const door = 'Door';
+export const frontMetalicWall = 'FrontMetalicWall';
+export const scoreboard = 'Scoreboard';
+export const frontWallHandrail = 'HandRail1';
+export const rightWallHandrail = 'HandRail2';
+export const preScoreBoard = 'PreScoreBoard';

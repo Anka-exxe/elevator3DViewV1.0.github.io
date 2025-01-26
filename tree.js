@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { FBXLoader } from "jsm/loaders/FBXLoader.js";
 import * as elements from './constants.js';
+import { Reflector } from 'jsm/objects/Reflector.js';
+
 
 let scene, camera, renderer, controls, elevatorModel;
 
@@ -30,7 +32,12 @@ function init() {
     scene.add(directionalLight);
 
     const loader = new FBXLoader();
-    loader.load('./TestLift.fbx', (object) => {
+
+    loader.load('./newModel.fbx', (fbx) => {
+        console.log(fbx.scene); // Вывод всей структуры модели в консоль
+    });
+
+    loader.load('./newModel.fbx', (object) => {
         elevatorModel = object;
 
         elevatorModel.traverse((child) => {
@@ -41,20 +48,47 @@ function init() {
         
         viewOutside();
 
-        // Загрузка текстур
-        loadTextureForObject(elements.frontWallHandrail, './хромированная сталь.jpg');
-        loadTextureForObject(elements.rightWallHandrail, './хромированная сталь.jpg');
-        loadTextureForObject(elements.leftWall, './DL89E_diffuse.jpg');
-        loadTextureForObject(elements.rightWall, './DL89E_diffuse.jpg');
-        loadTextureForObject(elements.frontWall, './DL89E_diffuse.jpg');
-        loadTextureForObject(elements.backWall, './DL89E_diffuse.jpg');
-        loadTextureForObject(elements.floor, 'nero marquina.jpg');
-        loadTextureForObject('Bumper', 'черная нержавеющая сталь.jpg');
-        loadTextureForObject(elements.door, 'шлифованная нержавейка.jpg');
-        loadTextureForObject('Сeiling', 'P01.jpg');
-        loadTextureForObject(elements.scoreboard, 'TL-D70.png');
-        loadTextureForObject(elements.preScoreBoard, 'зеркало.jpg');
-        loadTextureForObject(elements.frontMetalicWall, 'DL89E_glossiness.jpg');
+
+        elevatorModel.getObjectByName('LeftDoor1').visible = false;
+        elevatorModel.getObjectByName('RightDoor1').visible = false;
+        //elevatorModel.getObjectByName('BackWall11').visible = false;
+        elevatorModel.getObjectByName('BackWall12').visible = false;
+        elevatorModel.getObjectByName('BackWall13').visible = false;
+        elevatorModel.getObjectByName('BackWall14').visible = false;
+        elevatorModel.getObjectByName('Line660').visible = false;
+        elevatorModel.getObjectByName('Line663').visible = false;
+        elevatorModel.getObjectByName('Threshold1').visible = false;
+        elevatorModel.getObjectByName('RightHandrail11').visible = false;
+        elevatorModel.getObjectByName('RightHandrail12').visible = false;
+        elevatorModel.getObjectByName('RightHandrail13').visible = false;
+        elevatorModel.getObjectByName('RightHandrail14').visible = false;
+        elevatorModel.getObjectByName('RightHandrail15').visible = false;
+        elevatorModel.getObjectByName('RightHandrail16').visible = false;
+        elevatorModel.getObjectByName('RightHandrail17').visible = false;
+        elevatorModel.getObjectByName('RightHandrail18').visible = false;
+        elevatorModel.getObjectByName('BackHandrail11').visible = false;
+        elevatorModel.getObjectByName('BackHandrail12').visible = false;
+        elevatorModel.getObjectByName('BackHandrail13').visible = false;
+        elevatorModel.getObjectByName('BackWall1').visible = false;
+
+        loadTextureForObject(elements.elements.ControlPanel, './DL89E_glossiness.jpg');
+        loadTextureForObject(elements.elements.Lamp, './P01.jpg');
+        loadTextureForObject(elements.elements.Ceiling, './DL89E_glossiness.jpg');
+        loadTextureForObject(elements.elements.FrontWall, './DL89E_diffuse.jpg');
+        loadTextureForObject(elements.elements.BackWall, './DL89E_diffuse.jpg');
+        loadTextureForObject(elements.elements.LeftWall, './DL89E_diffuse.jpg');
+        loadTextureForObject(elements.elements.RightWall, './DL89E_diffuse.jpg');
+        loadTextureForObject(elements.elements.Door, './DL89E_glossiness.jpg');
+        loadTextureForObject(elements.Floor, './nero marquina.jpg');
+        loadTextureForObject(elements.elements.Bumper, './nero marquina.jpg');
+        loadTextureForObject(elements.Mirror, './зеркало.jpg');
+        loadTextureForObject(elements.Threshold, './nero marquina.jpg');
+        loadTextureForObject(elements.BackHandrail, './хромированная сталь.jpg');
+        loadTextureForObject(elements.elements.RightHandrail, './хромированная сталь.jpg');
+        loadTextureForObject(elements.DisplayVertical, './хромированная сталь.jpg');
+        loadTextureForObject('BackWall11', './хромированная сталь.jpg');
+        //createMirrorForObject('Mirror');
+
 
         const box = new THREE.Box3().setFromObject(elevatorModel);
         const center = box.getCenter(new THREE.Vector3());
@@ -127,7 +161,34 @@ function onWindowResize() {
     renderer.setSize(width, height);
 }
 
-export function loadTextureForObject(objectName, texturePath){
+function createMirrorForObject(objectName) {
+    const object = elevatorModel.getObjectByName(objectName);
+
+    if (object) {
+        // Создаём геометрию зеркала, основываясь на размере оригинального объекта
+        const mirrorGeometry = object.geometry.clone();
+
+        // Создаём зеркальную поверхность
+        const mirror = new Reflector(mirrorGeometry, {
+            clipBias: 0.003, // Сглаживание отражения
+            textureWidth: window.innerWidth * window.devicePixelRatio,
+            textureHeight: window.innerHeight * window.devicePixelRatio,
+            color: 0x889999, // Базовый цвет (серебристый)
+        });
+
+        // Устанавливаем позицию и ориентацию зеркала
+        mirror.position.copy(object.position);
+        mirror.rotation.copy(object.rotation);
+
+        // Заменяем оригинальный объект на зеркало
+        object.parent.add(mirror);
+        object.visible = false; // Скрываем оригинальный объект
+    } else {
+        console.warn(`${objectName} not found in the model`);
+    }
+}
+
+/*export function loadTextureForObject(objectName, texturePath){
     const obj = elevatorModel.getObjectByName(objectName);
     if (obj) {
         const textureLoader = new THREE.TextureLoader();
@@ -138,6 +199,44 @@ export function loadTextureForObject(objectName, texturePath){
             texture.repeat.set(1, 1);  // Например, повторение текстуры 4 раза по обеим осям
 
             // Создание материала с текстурой
+            const newMaterial = new THREE.MeshStandardMaterial({
+                map: texture
+            });
+
+            // Применяем новый материал к объекту
+            applyNewMaterial(obj, newMaterial);
+        }, undefined, (error) => {
+            console.error(`Error loading texture for ${objectName}:`, error);
+        });
+    } else {
+        console.warn(`${objectName} not found in the model`);
+    }
+}*/
+
+export function loadTextureForObject(objectNames, texturePath) {
+    // Если передан массив имен объектов
+    if (Array.isArray(objectNames)) {
+        objectNames.forEach((objectName) => {
+            applyTextureToSingleObject(objectName, texturePath);
+        });
+    } else {
+        // Если передано одно имя объекта
+        applyTextureToSingleObject(objectNames, texturePath);
+    }
+}
+
+// Функция для применения текстуры к одному объекту
+function applyTextureToSingleObject(objectName, texturePath) {
+    const obj = elevatorModel.getObjectByName(objectName);
+    if (obj) {
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load(texturePath, (texture) => {
+            // Настройка повторения текстуры, если нужно
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(1, 1); // Настройка повторений текстуры
+
+            // Создаем новый материал с текстурой
             const newMaterial = new THREE.MeshStandardMaterial({
                 map: texture
             });
@@ -169,12 +268,13 @@ function Animate3D() {
 
     const angle = controls.getAzimuthalAngle();
 
-    setVisibility(angle);
+    //setVisibility(angle);
 
     console.log(angle * 180 / Math.PI);
     
     renderer.render(scene, camera);
 }
+
 
 function setVisibility(angle) {
     const leftwall = elevatorModel.getObjectByName(elements.leftWall);

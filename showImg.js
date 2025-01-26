@@ -1,4 +1,6 @@
 import { loadTextureForObject } from './tree.js';
+import * as list from './constants.js';
+import {DisplayVertical} from "./constants.js";
 
 const images = {
     walls: [
@@ -76,12 +78,12 @@ const content = Tab.querySelector('.image-content');
 
         if (element === 'door'){
             img.addEventListener('click', () => {
-                loadTextureForObject('Door', image);
+                loadTextureForObject(list.elements.Door, image);
             });
         }
         else if(element === 'ceiling'){
             img.addEventListener('click', () => {
-                loadTextureForObject('Сeiling', image);
+                loadTextureForObject(list.elements.Lamp, image);
             });
         }
         else if (element === 'walls') {
@@ -99,12 +101,13 @@ const content = Tab.querySelector('.image-content');
         }
         else if(element === 'floor'){
             img.addEventListener('click', () => {
-                loadTextureForObject('Floor', image);
+                loadTextureForObject(list.Floor, image);
+                loadTextureForObject(list.elements.Bumper, image);
             });
         }
         else if(element === 'board'){
             img.addEventListener('click', () => {
-                loadTextureForObject('Scoreboard',image);
+                loadTextureForObject(list.DisplayVertical,image);
             });
         }
     });
@@ -114,12 +117,16 @@ function applyTextureToWall(target, texturePath) {
     if (target === 'all') {
         ['LeftWall', 'RightWall', 'FrontWall', 'BackWall'].forEach(partName => {
             console.log(`Applying texture to ${partName}`);
-            loadTextureForObject(partName, texturePath);
+            loadTextureForObject(list.elements[partName], texturePath);
         });
     } else {
         const partName = getWallPartName(target);
-            console.log(`Applying texture to ${partName}`);
-            loadTextureForObject(partName, texturePath);
+        if (partName) {
+            console.log(`Applying texture to all parts of ${partName}`);
+            loadTextureForObject(list.elements[partName], texturePath);
+        } else {
+            console.warn(`Target "${target}" does not match any wall part.`);
+        }
     }
 }
 
